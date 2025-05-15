@@ -1,6 +1,6 @@
 streamlit
-pandas
 yfinance
+pandas
 plotly
-openai
+openai>=1.0.0
 streamlit-chat
