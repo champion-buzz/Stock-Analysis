@@ -4,9 +4,9 @@ import pandas as pd
 import plotly.graph_objects as go
 import datetime
 
-# --- Page Setup ---
-st.set_page_config(page_title="📈 Stock Viewer + Historical Trend", layout="wide")
-st.title("📊 Stock Viewer + 🔁 Same-Date 10-Year Trend")
+# --- Streamlit Page Setup ---
+st.set_page_config(page_title="📈 Stock Viewer", layout="wide")
+st.title("📊 Stock Visualizer + 📆 Historical Same-Date Trend")
 
 # --- Stock Dropdown ---
 stock_options = {
@@ -30,7 +30,7 @@ def load_recent_data(ticker):
     df.dropna(inplace=True)
     df.reset_index(inplace=True)
     df['Change'] = df['Close'] - df['Open']
-    df['Change%'] = (df['Change'] / df['Open']) * 100
+    df['Change%'] = (df['Change'].astype(float) / df['Open'].astype(float)) * 100
     return df
 
 data = load_recent_data(ticker)
@@ -105,7 +105,7 @@ if trend_data.empty:
     st.warning("⚠️ No historical data available for this date.")
 else:
     # --- Chart: Year-over-Year Trend ---
-    st.subheader(f"📈 Open vs Close on {datetime.date.today():%b %d} Over Last 10 Years")
+    st.subheader(f"📈 Open vs Close on ~{datetime.date.today():%b %d} Over Last 10 Years")
 
     fig_trend = go.Figure()
     fig_trend.add_trace(go.Scatter(
@@ -125,7 +125,7 @@ else:
     fig_trend.update_layout(
         xaxis_title='Year',
         yaxis_title='Price ($)',
-        title=f"{ticker} Price on ~{datetime.date.today():%b %d} (Closest Date Each Year)",
+        title=f"{ticker} Price on ~{datetime.date.today():%b %d} (Closest Trading Day Each Year)",
         height=500
     )
     st.plotly_chart(fig_trend, use_container_width=True)
