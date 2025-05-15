@@ -27,10 +27,16 @@ ticker = stock_options[selected_stock]
 @st.cache_data
 def load_recent_data(ticker):
     df = yf.download(ticker, period="2y", interval="1d")
+    df = df[['Open', 'High', 'Low', 'Close', 'Volume']]  # Keep only needed columns
     df.dropna(inplace=True)
     df.reset_index(inplace=True)
+
     df['Change'] = df['Close'] - df['Open']
-    df['Change%'] = (df['Change'].astype(float) / df['Open'].astype(float)) * 100
+    df['Change%'] = df.apply(
+        lambda row: ((row['Close'] - row['Open']) / row['Open']) * 100 if row['Open'] != 0 else 0,
+        axis=1
+    )
+
     return df
 
 data = load_recent_data(ticker)
