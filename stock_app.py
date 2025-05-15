@@ -27,15 +27,24 @@ ticker = stock_options[selected_stock]
 @st.cache_data
 def load_recent_data(ticker):
     df = yf.download(ticker, period="2y", interval="1d")
-    df = df[['Open', 'High', 'Low', 'Close', 'Volume']]  # Keep only needed columns
+    df = df[['Open', 'High', 'Low', 'Close', 'Volume']]  # Only necessary columns
     df.dropna(inplace=True)
     df.reset_index(inplace=True)
 
     df['Change'] = df['Close'] - df['Open']
-    df['Change%'] = df.apply(
-        lambda row: ((row['Close'] - row['Open']) / row['Open']) * 100 if row['Open'] != 0 else 0,
-        axis=1
-    )
+
+    # Safe Change% calculation
+    def safe_percent(row):
+        try:
+            open_val = float(row['Open'])
+            if open_val > 0:
+                return ((float(row['Close']) - open_val) / open_val) * 100
+            else:
+                return 0
+        except:
+            return 0
+
+    df['Change%'] = df.apply(safe_percent, axis=1)
 
     return df
 
@@ -72,7 +81,6 @@ st.download_button(
 st.divider()
 st.header(f"📅 Historical Price on {datetime.date.today():%b %d} (Last 10 Years)")
 
-# Get same or closest date for last 10 years
 @st.cache_data
 def get_same_day_trend(ticker):
     today = datetime.date.today()
@@ -88,7 +96,6 @@ def get_same_day_trend(ticker):
     df['Month'] = df['Date'].dt.month
     df['Day'] = df['Date'].dt.day
 
-    # Get closest date for each year
     closest_rows = []
     for year in range(start_year, end_year + 1):
         target_date = datetime.date(year, month, day)
@@ -110,7 +117,6 @@ trend_data = get_same_day_trend(ticker)
 if trend_data.empty:
     st.warning("⚠️ No historical data available for this date.")
 else:
-    # --- Chart: Year-over-Year Trend ---
     st.subheader(f"📈 Open vs Close on ~{datetime.date.today():%b %d} Over Last 10 Years")
 
     fig_trend = go.Figure()
@@ -136,7 +142,6 @@ else:
     )
     st.plotly_chart(fig_trend, use_container_width=True)
 
-    # --- Table ---
     st.subheader("📋 Same-Date Trend Table (10 Years)")
     st.dataframe(trend_data, use_container_width=True)
 
