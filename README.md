@@ -24,6 +24,16 @@ The forecasts are a learning exercise and aren't financial advice.
 
 The app downloads daily prices with yfinance and calculates the change from open to close. For the forecast, it trains a separate Prophet model for open, high, low and close, then combines the results into one chart.
 
+## What I Learned
+
+The biggest lesson from this project is not to jump straight into coding. Building goes better when you follow a process:
+
+1. **Get a clear picture first.** Decide what you're building and how it should work before writing code. For this app, that means knowing where the data comes from, which views the page needs, and what the forecast should show.
+2. **Build toward that picture.** With the goal clear, each piece of code has a purpose.
+3. **Make small changes along the way.** The plan doesn't have to be perfect. Minor changes here and there are fine, as long as the overall picture stays the same.
+
+The forecast is a good example. How often it should run is worth deciding early, because the models currently retrain every time the page reloads.
+
 ## Next Steps
 
 - Cache forecasts so the page reloads faster
