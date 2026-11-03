@@ -32,11 +32,10 @@ The biggest lesson from this project is not to jump straight into coding. Buildi
 2. **Build toward that picture.** With the goal clear, each piece of code has a purpose.
 3. **Make small changes along the way.** The plan doesn't have to be perfect. Minor changes here and there are fine, as long as the overall picture stays the same.
 
-The forecast is a good example. How often it should run is worth deciding early, because the models currently retrain every time the page reloads.
+The forecast is a good example. The models retrained on every page reload until caching was added. How often they should run is worth deciding early.
 
 ## Next Steps
 
-- Cache forecasts so the page reloads faster
 - Measure forecast accuracy against past prices
 - Add tests
 

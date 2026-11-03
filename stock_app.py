@@ -147,9 +147,11 @@ def prepare_prophet_df(df, column):
     df_clean['y'] = pd.to_numeric(df_clean['y'], errors='coerce')
     return df_clean
 
-def forecast_prophet(df, column, days=7):
+# The leading underscore tells Streamlit not to hash the data, so results are keyed by ticker and column.
+@st.cache_data(ttl=3600, show_spinner="Training forecast model...")
+def forecast_prophet(_df, ticker, column, days=7):
     try:
-        df_train = prepare_prophet_df(df, column)
+        df_train = prepare_prophet_df(_df, column)
         if df_train.empty or len(df_train['y']) < 10:
             raise ValueError("Not enough data for Prophet.")
         model = Prophet(daily_seasonality=True)
@@ -163,7 +165,7 @@ def forecast_prophet(df, column, days=7):
 
 ohlc_forecast = {}
 for col in ['Open', 'High', 'Low', 'Close']:
-    result = forecast_prophet(data, col)
+    result = forecast_prophet(data, ticker, col)
     if result is not None:
         ohlc_forecast[col] = result
 
