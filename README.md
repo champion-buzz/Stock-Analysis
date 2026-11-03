@@ -1,38 +1,38 @@
-Stock Bar Chart App
-====================
+# Stock Price Explorer
 
-Overview:
----------
-This is a Streamlit web app that visualizes daily stock price changes using bar charts.
-It shows how a stock’s price has increased or decreased on each trading day over the past 2 years.
+A Streamlit app for exploring daily stock price changes, long-term history and short-term forecasts, using Yahoo Finance data.
 
-Key Features:
--------------
-- Select a stock from major companies (e.g., Apple, Tesla, Google, Amazon)
-- Choose a specific year and month
-- View bar charts showing daily change (Close - Open)
-- Green bars for gains, red bars for losses
-- Preview data table with Open, High, Low, Close, and Change
-- Download the selected month's data as a CSV file
+The forecasts are a learning exercise and aren't financial advice.
 
-How to Run:
------------
-1. Make sure Python 3.8+ is installed.
-2. Install dependencies:
-   pip install -r requirements.txt
-3. Start the app:
-   streamlit run stock_app.py
+## Tech Stack
 
-Project Files:
---------------
-- stock_app.py         : The main app file
-- requirements.txt     : Required Python packages
-- README.txt           : Project overview
+- Python and Streamlit
+- yfinance
+- pandas
+- Plotly
+- Prophet
 
-Author:
--------
-Created by Sachin Gujjar (GitHub: @champion-buzz)
+## Features
 
-Deploy Online:
---------------
-You can deploy this app on https://streamlit.io/cloud by linking your GitHub repo.
+- Choose from SPY and eight large companies, including Apple, Tesla and NVIDIA
+- See daily price changes as green and red bars, two months at a time
+- Browse the full price history and download it as CSV
+- Compare open and close prices on today's date over the last 15 years
+- See a 7-day Prophet forecast as a weekday candlestick chart
+
+## How It Works
+
+The app downloads daily prices with yfinance and calculates the change from open to close. For the forecast, it trains a separate Prophet model for open, high, low and close, then combines the results into one chart.
+
+## Next Steps
+
+- Cache forecasts so the page reloads faster
+- Measure forecast accuracy against past prices
+- Add tests
+
+## Run It
+
+```bash
+pip install -r requirements.txt
+streamlit run stock_app.py
+```
